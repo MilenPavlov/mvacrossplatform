@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-
+using HeritageProperties.iOS;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
@@ -23,11 +24,17 @@ namespace HeritagePropertiesiOS
 
         #region View lifecycle
 
-        public override void ViewDidLoad()
+
+        public List<HeritageProperty> Properties { get; set; } 
+        public async override void ViewDidLoad()
         {
+            Console.WriteLine("ViewDidLoad()");
             base.ViewDidLoad();
 
             // Perform any additional setup after loading the view, typically from a nib.
+            this.Properties = await HeritagePropertyService.Default.Load();
+            tableViewProperties.Source = new HeritagePropertiesTableViewSource(Properties);
+            tableViewProperties.ReloadData();
         }
 
         public override void ViewWillAppear(bool animated)
